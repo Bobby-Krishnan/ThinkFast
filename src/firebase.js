@@ -1,4 +1,4 @@
-// src/firebase.js
+// This config is safe to expose – it's client-side only
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
