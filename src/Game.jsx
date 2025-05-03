@@ -39,7 +39,9 @@ function Game({ settings, onGameEnd }) {
     Math.floor(Math.random() * (max - min + 1)) + min;
 
   const generateQuestion = () => {
-    const ops = Object.keys(settings.operations).filter((op) => settings.operations[op]);
+    const ops = Object.keys(settings.operations).filter(
+      (op) => settings.operations[op]
+    );
     const op = ops[Math.floor(Math.random() * ops.length)];
 
     let a, b, answer, text;
@@ -81,9 +83,10 @@ function Game({ settings, onGameEnd }) {
         break;
       }
 
-      default:
-        text = `1 + 1`;
+      default: {
+        text = "1 + 1";
         answer = 2;
+      }
     }
 
     setQuestion(text);
@@ -98,7 +101,6 @@ function Game({ settings, onGameEnd }) {
     generateQuestion();
   }, []);
 
-  // ✅ Auto-advance on correct input
   useEffect(() => {
     if (parseInt(input) === correctAnswer) {
       setScore((s) => s + 1);
@@ -107,23 +109,36 @@ function Game({ settings, onGameEnd }) {
   }, [input]);
 
   return (
-    <div style={{ padding: "2rem", minHeight: "100vh", position: "relative" }}>
-      <div style={{ position: "absolute", top: "1rem", left: "1rem" }}>
-        Seconds left: {timeLeft}
-      </div>
-      <div style={{ position: "absolute", top: "1rem", right: "1rem" }}>
-        Score: {score}
+    <div style={{ position: "relative", minHeight: "100vh", backgroundColor: "#f9fafb" }}>
+      {/* Top bar */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          padding: "1rem 2rem",
+          display: "flex",
+          justifyContent: "space-between",
+          fontSize: "1rem",
+          fontWeight: "500",
+          color: "#1f2937",
+        }}
+      >
+        <div>Seconds left: {timeLeft}</div>
+        <div>Score: {score}</div>
       </div>
 
+      {/* Centered input */}
       <div
         style={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          height: "100%",
+          minHeight: "100vh",
+          paddingTop: "4rem",
           fontSize: "2rem",
           fontWeight: "bold",
-          backgroundColor: "#e5e7eb",
         }}
       >
         <label>
