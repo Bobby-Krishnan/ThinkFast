@@ -123,6 +123,9 @@ function Game({ settings, onGameEnd }) {
               padding: "0.25rem",
               width: "100px",
               textAlign: "center",
+              appearance: "textfield",           
+              MozAppearance: "textfield",      
+              WebkitAppearance: "none",          
             }}
           />
         </label>
