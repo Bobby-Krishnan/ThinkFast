@@ -10,9 +10,12 @@ function Game({ settings, onGameEnd }) {
   const inputRef = useRef(null);
 
   useEffect(() => {
-    inputRef.current?.focus();
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 0);
   }, []);
 
+  // Timer only runs once
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeLeft((prev) => {
@@ -26,7 +29,7 @@ function Game({ settings, onGameEnd }) {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [score, onGameEnd]);
+  }, []); //  no dependencies
 
   const getRand = (min, max) =>
     Math.floor(Math.random() * (max - min + 1)) + min;
@@ -67,8 +70,8 @@ function Game({ settings, onGameEnd }) {
 
       case "division": {
         const r = settings.ranges.mulDiv;
-        a = getRand(r.minA, r.maxA); // small multiplier (divisor)
-        b = getRand(r.minB, r.maxB); // larger multiplicand (quotient)
+        a = getRand(r.minA, r.maxA); // multiplier (divisor)
+        b = getRand(r.minB, r.maxB); // multiplicand (quotient)
         text = `${a * b} ÷ ${a}`;
         answer = b;
         break;
@@ -82,7 +85,11 @@ function Game({ settings, onGameEnd }) {
     setQuestion(text);
     setCorrectAnswer(answer);
     setInput("");
-    inputRef.current?.focus();
+
+    // Safe refocus after layout
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 0);
   };
 
   useEffect(() => {
