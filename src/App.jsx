@@ -89,14 +89,13 @@ function App() {
             backgroundColor: "#f9fafb",
           }}
         >
-          <h1 style={{ fontSize: "3rem", marginBottom: "1rem" }}>Time's up!</h1>
-          <h2 style={{ fontSize: "2rem", marginBottom: "2rem" }}>
+          <h2 style={{ fontSize: "3rem", marginBottom: "3rem" }}>
             Score: {finalScore}
           </h2>
           <button
             onClick={() => setFinalScore(null)}
             style={{
-              fontSize: "1.25rem",
+              fontSize: "1.50rem",
               padding: "0.75rem 1.5rem",
               backgroundColor: "#3b82f6",
               color: "#fff",
