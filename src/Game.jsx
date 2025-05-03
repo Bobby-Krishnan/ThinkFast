@@ -4,6 +4,7 @@ function Game({ settings, onGameEnd }) {
   const [timeLeft, setTimeLeft] = useState(settings.duration);
   const [score, setScore] = useState(0);
   const scoreRef = useRef(score);
+  const hasEnded = useRef(false); // prevent double calls
   const [question, setQuestion] = useState("");
   const [correctAnswer, setCorrectAnswer] = useState(null);
   const [input, setInput] = useState("");
@@ -25,7 +26,10 @@ function Game({ settings, onGameEnd }) {
       setTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(interval);
-          onGameEnd(scoreRef.current);
+          if (!hasEnded.current) {
+            hasEnded.current = true;
+            onGameEnd(scoreRef.current);
+          }
           return 0;
         }
         return prev - 1;
@@ -145,8 +149,8 @@ function Game({ settings, onGameEnd }) {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          height: "80vh", // Shifted upward
-          fontSize: "3rem", // Bigger text
+          height: "80vh",
+          fontSize: "3rem",
           fontWeight: "bold",
         }}
       >
@@ -167,7 +171,7 @@ function Game({ settings, onGameEnd }) {
             }}
             ref={inputRef}
             style={{
-              fontSize: "2.5rem", // Bigger input
+              fontSize: "2.5rem",
               padding: "0.5rem",
               width: "130px",
               textAlign: "center",
