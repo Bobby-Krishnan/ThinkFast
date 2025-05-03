@@ -93,11 +93,20 @@ function Game({ settings, onGameEnd }) {
   };
 
   useEffect(() => {
+    generateQuestion();
+  }, []);
+
+  useEffect(() => {
     if (parseInt(input) === correctAnswer) {
       setScore((s) => s + 1);
       generateQuestion();
     }
   }, [input]);
+
+  // Prevent rendering until question is initialized
+  if (correctAnswer === null) {
+    return null;
+  }
 
   return (
     <div
