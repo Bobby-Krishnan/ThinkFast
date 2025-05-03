@@ -55,7 +55,6 @@ function Game({ settings, onGameEnd }) {
         answer = a + b;
         break;
       }
-
       case "subtraction": {
         const r = settings.ranges.addSub;
         a = getRand(r.minA, r.maxA);
@@ -64,7 +63,6 @@ function Game({ settings, onGameEnd }) {
         answer = a;
         break;
       }
-
       case "multiplication": {
         const r = settings.ranges.mulDiv;
         a = getRand(r.minA, r.maxA);
@@ -73,20 +71,17 @@ function Game({ settings, onGameEnd }) {
         answer = a * b;
         break;
       }
-
       case "division": {
         const r = settings.ranges.mulDiv;
-        a = getRand(r.minA, r.maxA);
-        b = getRand(r.minB, r.maxB);
+        a = getRand(r.minA, r.maxA); // divisor
+        b = getRand(r.minB, r.maxB); // quotient
         text = `${a * b} ÷ ${a}`;
         answer = b;
         break;
       }
-
-      default: {
+      default:
         text = "1 + 1";
         answer = 2;
-      }
     }
 
     setQuestion(text);
@@ -109,7 +104,17 @@ function Game({ settings, onGameEnd }) {
   }, [input]);
 
   return (
-    <div style={{ position: "relative", minHeight: "100vh", backgroundColor: "#f9fafb" }}>
+    <div
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100vw",
+        height: "100vh",
+        backgroundColor: "#f9fafb",
+        overflow: "hidden",
+      }}
+    >
       {/* Top bar */}
       <div
         style={{
@@ -129,14 +134,13 @@ function Game({ settings, onGameEnd }) {
         <div>Score: {score}</div>
       </div>
 
-      {/* Centered input */}
+      {/* Centered question & input */}
       <div
         style={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          minHeight: "100vh",
-          paddingTop: "4rem",
+          height: "100%",
           fontSize: "2rem",
           fontWeight: "bold",
         }}
