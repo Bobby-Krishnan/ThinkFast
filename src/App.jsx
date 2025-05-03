@@ -13,7 +13,7 @@ function App() {
     setGameSettings(settings);
     setFinalScore(null);
     setCountdownActive(true);
-    setCount(3);
+    setCount(5);
   };
 
   useEffect(() => {
@@ -83,14 +83,15 @@ function App() {
             minHeight: "100vh",
             display: "flex",
             flexDirection: "column",
-            justifyContent: "center",
+            justifyContent: "flex-start", // Shift up
+            paddingTop: "16rem", // Adjust vertical position
             alignItems: "center",
             backgroundColor: "#f9fafb",
           }}
         >
           <h1 style={{ fontSize: "3rem", marginBottom: "1rem" }}>Time's up!</h1>
           <h2 style={{ fontSize: "2rem", marginBottom: "2rem" }}>
-             Score: {finalScore}
+            Score: {finalScore}
           </h2>
           <button
             onClick={() => setFinalScore(null)}
