@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 function Game({ settings, onGameEnd }) {
   const [timeLeft, setTimeLeft] = useState(settings.duration);
   const [score, setScore] = useState(0);
-  const scoreRef = useRef(score); // track latest score for accuracy
+  const scoreRef = useRef(score);
   const [question, setQuestion] = useState("");
   const [correctAnswer, setCorrectAnswer] = useState(null);
   const [input, setInput] = useState("");
@@ -16,18 +16,16 @@ function Game({ settings, onGameEnd }) {
     }, 0);
   }, []);
 
-  // Update scoreRef when score changes
   useEffect(() => {
     scoreRef.current = score;
   }, [score]);
 
-  // Run timer once at game start
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(interval);
-          onGameEnd(scoreRef.current); // use the latest score
+          onGameEnd(scoreRef.current);
           return 0;
         }
         return prev - 1;
@@ -35,7 +33,7 @@ function Game({ settings, onGameEnd }) {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []); // run only once
+  }, []);
 
   const getRand = (min, max) =>
     Math.floor(Math.random() * (max - min + 1)) + min;
@@ -76,8 +74,8 @@ function Game({ settings, onGameEnd }) {
 
       case "division": {
         const r = settings.ranges.mulDiv;
-        a = getRand(r.minA, r.maxA); // divisor (small)
-        b = getRand(r.minB, r.maxB); // quotient (larger)
+        a = getRand(r.minA, r.maxA);
+        b = getRand(r.minB, r.maxB);
         text = `${a * b} ÷ ${a}`;
         answer = b;
         break;
@@ -100,13 +98,13 @@ function Game({ settings, onGameEnd }) {
     generateQuestion();
   }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // ✅ Auto-advance on correct input
+  useEffect(() => {
     if (parseInt(input) === correctAnswer) {
       setScore((s) => s + 1);
+      generateQuestion();
     }
-    generateQuestion();
-  };
+  }, [input]);
 
   return (
     <div style={{ padding: "2rem", minHeight: "100vh", position: "relative" }}>
@@ -117,8 +115,7 @@ function Game({ settings, onGameEnd }) {
         Score: {score}
       </div>
 
-      <form
-        onSubmit={handleSubmit}
+      <div
         style={{
           display: "flex",
           justifyContent: "center",
@@ -147,7 +144,7 @@ function Game({ settings, onGameEnd }) {
             }}
           />
         </label>
-      </form>
+      </div>
     </div>
   );
 }
