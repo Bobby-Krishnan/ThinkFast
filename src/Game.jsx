@@ -93,10 +93,6 @@ function Game({ settings, onGameEnd }) {
   };
 
   useEffect(() => {
-    generateQuestion();
-  }, []);
-
-  useEffect(() => {
     if (parseInt(input) === correctAnswer) {
       setScore((s) => s + 1);
       generateQuestion();
@@ -151,6 +147,15 @@ function Game({ settings, onGameEnd }) {
             type="number"
             value={input}
             onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                const numeric = parseInt(input);
+                if (numeric !== correctAnswer) {
+                  setScore((s) => Math.max(0, s - 1));
+                  generateQuestion();
+                }
+              }
+            }}
             ref={inputRef}
             style={{
               fontSize: "2rem",
