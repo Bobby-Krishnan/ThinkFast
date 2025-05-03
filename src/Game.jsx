@@ -104,7 +104,6 @@ function Game({ settings, onGameEnd }) {
     }
   }, [input]);
 
-  // Avoid rendering before the first question is ready
   if (correctAnswer === null) {
     return null;
   }
@@ -146,8 +145,8 @@ function Game({ settings, onGameEnd }) {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          height: "100%",
-          fontSize: "2rem",
+          height: "80vh", // Shifted upward
+          fontSize: "3rem", // Bigger text
           fontWeight: "bold",
         }}
       >
@@ -168,9 +167,9 @@ function Game({ settings, onGameEnd }) {
             }}
             ref={inputRef}
             style={{
-              fontSize: "2rem",
-              padding: "0.25rem",
-              width: "100px",
+              fontSize: "2.5rem", // Bigger input
+              padding: "0.5rem",
+              width: "130px",
               textAlign: "center",
               appearance: "textfield",
               MozAppearance: "textfield",

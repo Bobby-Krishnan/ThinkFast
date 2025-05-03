@@ -13,7 +13,7 @@ function App() {
     setGameSettings(settings);
     setFinalScore(null);
     setCountdownActive(true);
-    setCount(5);
+    setCount(3);
   };
 
   useEffect(() => {
