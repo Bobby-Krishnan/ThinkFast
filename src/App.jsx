@@ -25,9 +25,10 @@ function App() {
           style={{
             display: "flex",
             flexDirection: "column",
-            justifyContent: "center",
+            justifyContent: "flex-start",
             alignItems: "center",
             minHeight: "100vh",
+            paddingTop: "1rem",
             padding: "2rem",
           }}
         >
