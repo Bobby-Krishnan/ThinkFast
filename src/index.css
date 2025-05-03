@@ -77,7 +77,7 @@ button:focus-visible {
   }
 }
 
-/* Remove number spinner arrows */
+/* Remove spinner arrows */
 input[type="number"] {
   -moz-appearance: textfield;
 }
