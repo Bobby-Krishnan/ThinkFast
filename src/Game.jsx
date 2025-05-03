@@ -11,9 +11,9 @@ function Game({ settings, onGameEnd }) {
   const inputRef = useRef(null);
 
   useEffect(() => {
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       inputRef.current?.focus();
-    }, 0);
+    });
   }, []);
 
   useEffect(() => {
@@ -73,8 +73,8 @@ function Game({ settings, onGameEnd }) {
       }
       case "division": {
         const r = settings.ranges.mulDiv;
-        a = getRand(r.minA, r.maxA); // divisor
-        b = getRand(r.minB, r.maxB); // quotient
+        a = getRand(r.minA, r.maxA);
+        b = getRand(r.minB, r.maxB);
         text = `${a * b} ÷ ${a}`;
         answer = b;
         break;
@@ -87,9 +87,10 @@ function Game({ settings, onGameEnd }) {
     setQuestion(text);
     setCorrectAnswer(answer);
     setInput("");
-    setTimeout(() => {
+
+    requestAnimationFrame(() => {
       inputRef.current?.focus();
-    }, 0);
+    });
   };
 
   useEffect(() => {
@@ -103,7 +104,7 @@ function Game({ settings, onGameEnd }) {
     }
   }, [input]);
 
-  // Prevent rendering until question is initialized
+  // Avoid rendering before the first question is ready
   if (correctAnswer === null) {
     return null;
   }
