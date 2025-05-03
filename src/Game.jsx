@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 function Game({ settings, onGameEnd }) {
   const [timeLeft, setTimeLeft] = useState(settings.duration);
   const [score, setScore] = useState(0);
+  const scoreRef = useRef(score); // track latest score for accuracy
   const [question, setQuestion] = useState("");
   const [correctAnswer, setCorrectAnswer] = useState(null);
   const [input, setInput] = useState("");
@@ -15,13 +16,18 @@ function Game({ settings, onGameEnd }) {
     }, 0);
   }, []);
 
-  // Timer only runs once
+  // Update scoreRef when score changes
+  useEffect(() => {
+    scoreRef.current = score;
+  }, [score]);
+
+  // Run timer once at game start
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(interval);
-          onGameEnd(score);
+          onGameEnd(scoreRef.current); // use the latest score
           return 0;
         }
         return prev - 1;
@@ -29,7 +35,7 @@ function Game({ settings, onGameEnd }) {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []); //  no dependencies
+  }, []); // run only once
 
   const getRand = (min, max) =>
     Math.floor(Math.random() * (max - min + 1)) + min;
@@ -70,8 +76,8 @@ function Game({ settings, onGameEnd }) {
 
       case "division": {
         const r = settings.ranges.mulDiv;
-        a = getRand(r.minA, r.maxA); // multiplier (divisor)
-        b = getRand(r.minB, r.maxB); // multiplicand (quotient)
+        a = getRand(r.minA, r.maxA); // divisor (small)
+        b = getRand(r.minB, r.maxB); // quotient (larger)
         text = `${a * b} ÷ ${a}`;
         answer = b;
         break;
@@ -85,8 +91,6 @@ function Game({ settings, onGameEnd }) {
     setQuestion(text);
     setCorrectAnswer(answer);
     setInput("");
-
-    // Safe refocus after layout
     setTimeout(() => {
       inputRef.current?.focus();
     }, 0);
