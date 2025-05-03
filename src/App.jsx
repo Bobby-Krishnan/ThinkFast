@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import Settings from "./Settings";
 import Game from "./Game";
+import GlobalStats from "./GlobalStats";
+import { doc, updateDoc, increment } from "firebase/firestore";
+import { db } from "./firebase";
 
 function App() {
   const [gameStarted, setGameStarted] = useState(false);
@@ -29,9 +32,18 @@ function App() {
     }
   }, [countdownActive, count]);
 
-  const handleGameEnd = (score) => {
+  const handleGameEnd = async (score) => {
     setFinalScore(score);
     setGameStarted(false);
+
+    try {
+      const docRef = doc(db, "stats", "global");
+      await updateDoc(docRef, {
+        problemsSolved: increment(score),
+      });
+    } catch (error) {
+      console.error("Failed to update global counter:", error);
+    }
   };
 
   return (
@@ -48,9 +60,10 @@ function App() {
             padding: "2rem",
           }}
         >
-          <h1 style={{ textAlign: "center", marginBottom: "2rem" }}>
+          <h1 style={{ textAlign: "center", marginBottom: "1rem" }}>
             ThinkFast
           </h1>
+          <GlobalStats />
           <Settings onStart={handleStart} />
         </div>
       )}
@@ -83,8 +96,8 @@ function App() {
             minHeight: "100vh",
             display: "flex",
             flexDirection: "column",
-            justifyContent: "flex-start", // Shift up
-            paddingTop: "16rem", // Adjust vertical position
+            justifyContent: "flex-start",
+            paddingTop: "16rem",
             alignItems: "center",
             backgroundColor: "#f9fafb",
           }}
@@ -95,7 +108,7 @@ function App() {
           <button
             onClick={() => setFinalScore(null)}
             style={{
-              fontSize: "1.50rem",
+              fontSize: "1.5rem",
               padding: "0.75rem 1.5rem",
               backgroundColor: "#3b82f6",
               color: "#fff",
