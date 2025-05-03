@@ -9,7 +9,7 @@ function Game({ settings, onGameEnd }) {
 
   const inputRef = useRef(null);
 
-  // Focus input box on start
+  // Focus input on load
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
@@ -30,54 +30,57 @@ function Game({ settings, onGameEnd }) {
     return () => clearInterval(interval);
   }, [score, onGameEnd]);
 
-  // Generate a random question
+  const getRand = (min, max) =>
+    Math.floor(Math.random() * (max - min + 1)) + min;
+
   const generateQuestion = () => {
     const ops = Object.keys(settings.operations).filter((op) => settings.operations[op]);
     const op = ops[Math.floor(Math.random() * ops.length)];
 
-    const getRand = () =>
-      Math.floor(Math.random() * (settings.ranges.max - settings.ranges.min + 1)) +
-      settings.ranges.min;
+    let a, b, answer, text;
 
-    let a = getRand();
-    let b = getRand();
-    let questionText = "";
-    let answer = 0;
+    if (op === "addition" || op === "subtraction") {
+      const r = settings.ranges.addSub;
+      a = getRand(r.minA, r.maxA);
+      b = getRand(r.minB, r.maxB);
+    } else {
+      const r = settings.ranges.mulDiv;
+      a = getRand(r.minA, r.maxA);
+      b = getRand(r.minB, r.maxB);
+    }
 
     switch (op) {
       case "addition":
-        questionText = `${a} + ${b}`;
+        text = `${a} + ${b}`;
         answer = a + b;
         break;
       case "subtraction":
-        questionText = `${a + b} - ${b}`;
+        text = `${a + b} - ${b}`;
         answer = a;
         break;
       case "multiplication":
-        questionText = `${a} × ${b}`;
+        text = `${a} × ${b}`;
         answer = a * b;
         break;
       case "division":
-        questionText = `${a * b} ÷ ${b}`;
+        text = `${a * b} ÷ ${b}`;
         answer = a;
         break;
       default:
-        questionText = "1 + 1";
+        text = `1 + 1`;
         answer = 2;
     }
 
-    setQuestion(questionText);
+    setQuestion(text);
     setCorrectAnswer(answer);
     setInput("");
     inputRef.current?.focus();
   };
 
-  // First question on mount
   useEffect(() => {
     generateQuestion();
   }, []);
 
-  // Handle answer submit
   const handleSubmit = (e) => {
     e.preventDefault();
     if (parseInt(input) === correctAnswer) {
@@ -88,17 +91,13 @@ function Game({ settings, onGameEnd }) {
 
   return (
     <div style={{ padding: "2rem", minHeight: "100vh", position: "relative" }}>
-      {/* Timer top-left */}
-      <div style={{ position: "absolute", top: "1rem", left: "1rem", fontSize: "1rem" }}>
+      <div style={{ position: "absolute", top: "1rem", left: "1rem" }}>
         Seconds left: {timeLeft}
       </div>
-
-      {/* Score top-right */}
-      <div style={{ position: "absolute", top: "1rem", right: "1rem", fontSize: "1rem" }}>
+      <div style={{ position: "absolute", top: "1rem", right: "1rem" }}>
         Score: {score}
       </div>
 
-      {/* Question center */}
       <form
         onSubmit={handleSubmit}
         style={{
@@ -108,7 +107,7 @@ function Game({ settings, onGameEnd }) {
           height: "100%",
           fontSize: "2rem",
           fontWeight: "bold",
-          backgroundColor: "#e5e7eb", // light gray
+          backgroundColor: "#e5e7eb",
         }}
       >
         <label>
@@ -123,9 +122,6 @@ function Game({ settings, onGameEnd }) {
               padding: "0.25rem",
               width: "100px",
               textAlign: "center",
-              appearance: "textfield",           
-              MozAppearance: "textfield",      
-              WebkitAppearance: "none",          
             }}
           />
         </label>
