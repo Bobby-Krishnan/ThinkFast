@@ -9,12 +9,10 @@ function Game({ settings, onGameEnd }) {
 
   const inputRef = useRef(null);
 
-  // Focus input on load
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
 
-  // Countdown timer
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeLeft((prev) => {
@@ -39,33 +37,43 @@ function Game({ settings, onGameEnd }) {
 
     let a, b, answer, text;
 
-    if (op === "addition" || op === "subtraction") {
-      const r = settings.ranges.addSub;
-      a = getRand(r.minA, r.maxA);
-      b = getRand(r.minB, r.maxB);
-    } else {
-      const r = settings.ranges.mulDiv;
-      a = getRand(r.minA, r.maxA);
-      b = getRand(r.minB, r.maxB);
-    }
-
     switch (op) {
-      case "addition":
+      case "addition": {
+        const r = settings.ranges.addSub;
+        a = getRand(r.minA, r.maxA);
+        b = getRand(r.minB, r.maxB);
         text = `${a} + ${b}`;
         answer = a + b;
         break;
-      case "subtraction":
+      }
+
+      case "subtraction": {
+        const r = settings.ranges.addSub;
+        a = getRand(r.minA, r.maxA);
+        b = getRand(r.minB, r.maxB);
         text = `${a + b} - ${b}`;
         answer = a;
         break;
-      case "multiplication":
+      }
+
+      case "multiplication": {
+        const r = settings.ranges.mulDiv;
+        a = getRand(r.minA, r.maxA);
+        b = getRand(r.minB, r.maxB);
         text = `${a} × ${b}`;
         answer = a * b;
         break;
-      case "division":
-        text = `${a * b} ÷ ${b}`;
-        answer = a;
+      }
+
+      case "division": {
+        const r = settings.ranges.mulDiv;
+        a = getRand(r.minA, r.maxA); // small multiplier (divisor)
+        b = getRand(r.minB, r.maxB); // larger multiplicand (quotient)
+        text = `${a * b} ÷ ${a}`;
+        answer = b;
         break;
+      }
+
       default:
         text = `1 + 1`;
         answer = 2;
@@ -122,6 +130,9 @@ function Game({ settings, onGameEnd }) {
               padding: "0.25rem",
               width: "100px",
               textAlign: "center",
+              appearance: "textfield",
+              MozAppearance: "textfield",
+              WebkitAppearance: "none",
             }}
           />
         </label>
