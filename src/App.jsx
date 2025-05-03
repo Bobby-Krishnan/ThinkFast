@@ -21,16 +21,37 @@ function App() {
   return (
     <div style={{ minHeight: "100vh", backgroundColor: "#f8f9fa" }}>
       {!gameStarted && finalScore === null && (
-        <>
-          <h1 style={{ textAlign: "center", marginTop: "2rem" }}>ThinkFast</h1>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "100vh",
+            padding: "2rem",
+          }}
+        >
+          <h1 style={{ textAlign: "center", marginBottom: "2rem" }}>ThinkFast</h1>
           <Settings onStart={handleStart} />
-        </>
+        </div>
       )}
 
-      {gameStarted && <Game settings={gameSettings} onGameEnd={handleGameEnd} />}
+      {gameStarted && (
+        <Game settings={gameSettings} onGameEnd={handleGameEnd} />
+      )}
 
       {!gameStarted && finalScore !== null && (
-        <div style={{ textAlign: "center", padding: "2rem" }}>
+        <div
+          style={{
+            textAlign: "center",
+            padding: "2rem",
+            minHeight: "100vh",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <h2>Time's up!</h2>
           <h3>Your score: {finalScore}</h3>
           <button onClick={() => setFinalScore(null)}>Play Again</button>
