@@ -18,7 +18,7 @@ function MultiplayerGame() {
 
   const inputRef = useRef(null);
   const finishedRef = useRef(false);
-  const scoreRef = useRef(0); // NEW: to track latest score
+  const scoreRef = useRef(0);
 
   const isHost = location.pathname.includes("host");
   const playerId = `${lobbyCode}-${isHost ? "host" : "player"}`;
@@ -55,8 +55,16 @@ function MultiplayerGame() {
     return () => clearInterval(interval);
   }, [startTime, settings]);
 
+  // 🔧 Robust focus fix for host/player
   useEffect(() => {
-    requestAnimationFrame(() => inputRef.current?.focus());
+    const interval = setInterval(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+        clearInterval(interval);
+      }
+    }, 50);
+
+    return () => clearInterval(interval);
   }, [currentIndex]);
 
   const handleChange = (e) => {
