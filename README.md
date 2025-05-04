@@ -21,6 +21,8 @@ Create a lobby and share the code with your friend to join
 
 Both players receive the exact same sequence of problems
 
+At the moment, the only game mode possible for multiplayer is the deafult 120 second game with the default settings in the home page
+
 **Global Stats**
 
 Live "Problems Solved" counter on the home screen
