@@ -16,10 +16,12 @@ function MultiplayerGame() {
   const [timeLeft, setTimeLeft] = useState(null);
   const [startTime, setStartTime] = useState(null);
   const inputRef = useRef(null);
+  const finishedRef = useRef(false);
 
   const isHost = location.pathname.includes("host");
   const playerId = `${lobbyCode}-${isHost ? "host" : "player"}`;
 
+  // Load lobby settings and start time
   useEffect(() => {
     const fetchLobby = async () => {
       const snap = await getDoc(doc(db, "lobbies", lobbyCode));
@@ -33,7 +35,7 @@ function MultiplayerGame() {
     fetchLobby();
   }, [lobbyCode]);
 
-  // Sync timer using system clock
+  // Sync timer based on startTime
   useEffect(() => {
     if (!startTime || !settings) return;
 
@@ -48,11 +50,12 @@ function MultiplayerGame() {
       } else {
         setTimeLeft(remaining);
       }
-    }, 250); // Small interval for smoother updates
+    }, 250);
 
     return () => clearInterval(interval);
   }, [startTime, settings]);
 
+  // Autofocus input on question change
   useEffect(() => {
     requestAnimationFrame(() => inputRef.current?.focus());
   }, [currentIndex]);
@@ -88,11 +91,18 @@ function MultiplayerGame() {
   };
 
   const finishGame = async () => {
-    await updateDoc(doc(db, "lobbies", lobbyCode), {
-      [`players.${playerId}.score`]: score,
-    });
+    if (finishedRef.current) return;
+    finishedRef.current = true;
 
-    navigate(`/lobby/${lobbyCode}/${isHost ? "host" : "player"}/results`);
+    try {
+      await updateDoc(doc(db, "lobbies", lobbyCode), {
+        [`players.${playerId}.score`]: score,
+      });
+
+      navigate(`/lobby/${lobbyCode}/${isHost ? "host" : "player"}/results`);
+    } catch (err) {
+      console.error("Error submitting score:", err);
+    }
   };
 
   if (!settings || !questions.length) return <p>Loading game...</p>;
@@ -110,11 +120,13 @@ function MultiplayerGame() {
         textAlign: "center",
       }}
     >
+      {/* Top bar */}
       <div style={{ width: "100%", display: "flex", justifyContent: "space-between", fontSize: "1.2rem" }}>
         <div>Time: {timeLeft ?? settings.duration}s</div>
         <div>Score: {score}</div>
       </div>
 
+      {/* Question */}
       <div style={{ fontSize: "2rem", fontWeight: "bold", marginTop: "4rem" }}>
         {questions[currentIndex] || "Done!"} ={" "}
         <input
