@@ -49,7 +49,7 @@ function HostGameLobby() {
   const { lobbyCode } = useParams();
   const [players, setPlayers] = useState([]);
   const [settings] = useState({
-    duration: 60,
+    duration: 120,
     operations: {
       addition: true,
       subtraction: true,

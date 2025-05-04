@@ -142,7 +142,7 @@ function MultiplayerGame() {
       </div>
 
       {/* Question */}
-      <div style={{ fontSize: "2rem", fontWeight: "bold", marginTop: "4rem" }}>
+      <div style={{ fontSize: "3rem", fontWeight: "bold", marginTop: "-10rem" }}>
         {questions[currentIndex] || "Done!"} ={" "}
         <input
           type="number"
@@ -153,14 +153,14 @@ function MultiplayerGame() {
           style={{
             fontSize: "2rem",
             padding: "0.25rem",
-            width: "120px",
+            width: "150px",
             textAlign: "center",
             appearance: "textfield",
           }}
         />
       </div>
 
-      <div style={{ height: "1rem" }} />
+      <div style={{ height: "2rem" }} />
     </div>
   );
 }

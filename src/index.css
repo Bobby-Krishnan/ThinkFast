@@ -77,9 +77,11 @@ button:focus-visible {
   }
 }
 
-/* Remove spinner arrows */
+/* Remove spinner arrows from ALL number inputs (Chrome, Safari, Firefox) */
 input[type="number"] {
-  -moz-appearance: textfield;
+  appearance: none;               /* modern standard */
+  -webkit-appearance: none;       /* Chrome/Safari */
+  -moz-appearance: textfield;     /* Firefox */
 }
 
 input[type="number"]::-webkit-inner-spin-button,
