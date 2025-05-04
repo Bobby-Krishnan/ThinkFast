@@ -60,9 +60,31 @@ function App() {
             padding: "2rem",
           }}
         >
-          <h1 style={{ textAlign: "center", marginBottom: "1rem", fontSize: "3.5rem", fontweight: 700, }}>
+          <h1
+            style={{
+              textAlign: "center",
+              marginBottom: "0.5rem",
+              fontSize: "3.5rem",
+              fontWeight: 700,
+            }}
+          >
             ThinkFast
           </h1>
+
+          <p
+            style={{
+              textAlign: "center",
+              marginBottom: "0.5rem",
+              fontSize: "1.1rem",
+              color: "#4b5563",
+              maxWidth: "700px",
+            }}
+          >
+            ThinkFast is a fast-paced mental math game. Choose your operations,
+            set your difficulty, and race against the clock to solve as many
+            problems as you can. Play solo or challenge a friend in multiplayer mode!
+          </p>
+
           <GlobalStats />
           <Settings onStart={handleStart} />
         </div>
