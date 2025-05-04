@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { db } from "./firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 
 function MultiplayerResults() {
   const { lobbyCode } = useParams();
@@ -26,14 +26,27 @@ function MultiplayerResults() {
     fetchScores();
   }, [lobbyCode]);
 
+  const handleRematch = async () => {
+    const lobbyRef = doc(db, "lobbies", lobbyCode);
+
+    await updateDoc(lobbyRef, {
+      status: "waiting",
+      questions: [],
+      [`players.${playerId}.score`]: 0,
+      [`players.${opponentId}.score`]: 0,
+    });
+
+    navigate(`/lobby/${lobbyCode}/${isHost ? "host" : "player"}`);
+  };
+
   if (loading) return <p>Loading results...</p>;
 
   const myScore = players[playerId]?.score ?? 0;
   const oppScore = players[opponentId]?.score ?? 0;
 
   let resultMsg = "It's a tie!";
-  if (myScore > oppScore) resultMsg = "You win!";
-  else if (myScore < oppScore) resultMsg = "You lose";
+  if (myScore > oppScore) resultMsg = "You win! 🎉";
+  else if (myScore < oppScore) resultMsg = "You lose 😢";
 
   return (
     <div
@@ -59,20 +72,37 @@ function MultiplayerResults() {
         {resultMsg}
       </h2>
 
-      <button
-        onClick={() => navigate("/")}
-        style={{
-          fontSize: "1.25rem",
-          padding: "0.75rem 1.5rem",
-          backgroundColor: "#3b82f6",
-          color: "#fff",
-          border: "none",
-          borderRadius: "8px",
-          cursor: "pointer",
-        }}
-      >
-        Back to Menu
-      </button>
+      <div style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
+        <button
+          onClick={() => navigate("/")}
+          style={{
+            fontSize: "1.25rem",
+            padding: "0.75rem 1.5rem",
+            backgroundColor: "#6b7280",
+            color: "#fff",
+            border: "none",
+            borderRadius: "8px",
+            cursor: "pointer",
+          }}
+        >
+          Back to Menu
+        </button>
+
+        <button
+          onClick={handleRematch}
+          style={{
+            fontSize: "1.25rem",
+            padding: "0.75rem 1.5rem",
+            backgroundColor: "#10b981",
+            color: "#fff",
+            border: "none",
+            borderRadius: "8px",
+            cursor: "pointer",
+          }}
+        >
+          Rematch
+        </button>
+      </div>
     </div>
   );
 }

@@ -47,20 +47,19 @@ function MultiplayerGame() {
   }, [timeLeft]);
 
   useEffect(() => {
-    inputRef.current?.focus();
+    requestAnimationFrame(() => inputRef.current?.focus());
   }, [currentIndex]);
 
   const handleChange = (e) => {
-    setInput(e.target.value);
-  };
+    const value = e.target.value;
+    setInput(value);
 
-  const handleInput = () => {
     const currentQ = questions[currentIndex];
     if (!currentQ) return;
 
-    const answer = eval(currentQ.replace("×", "*").replace("÷", "/"));
+    const correctAnswer = eval(currentQ.replace("×", "*").replace("÷", "/"));
 
-    if (parseInt(input) === answer) {
+    if (parseInt(value) === correctAnswer) {
       setScore((prev) => prev + 1);
       setCurrentIndex((prev) => prev + 1);
       setInput("");
@@ -70,11 +69,12 @@ function MultiplayerGame() {
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       const currentQ = questions[currentIndex];
-      const answer = eval(currentQ.replace("×", "*").replace("÷", "/"));
+      const correctAnswer = eval(currentQ.replace("×", "*").replace("÷", "/"));
+      const numeric = parseInt(input);
 
-      if (parseInt(input) !== answer) {
-        setScore((prev) => Math.max(0, prev - 1));
-        setCurrentIndex((prev) => prev + 1);
+      if (numeric !== correctAnswer) {
+        setScore((s) => Math.max(0, s - 1));
+        setCurrentIndex((i) => i + 1);
         setInput("");
       }
     }
@@ -84,7 +84,7 @@ function MultiplayerGame() {
     await updateDoc(doc(db, "lobbies", lobbyCode), {
       [`players.${playerId}.score`]: score,
     });
-    navigate(`/lobby/${lobbyCode}/results`);
+    navigate(`/lobby/${lobbyCode}/${isHost ? "host" : "player"}/results`);
   };
 
   if (!settings || !questions.length) return <p>Loading game...</p>;
@@ -127,7 +127,7 @@ function MultiplayerGame() {
         />
       </div>
 
-      {/* End */}
+      {/* Footer buffer */}
       <div style={{ height: "1rem" }} />
     </div>
   );
