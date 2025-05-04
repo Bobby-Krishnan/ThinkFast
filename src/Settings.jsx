@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Settings({ onStart }) {
+  const navigate = useNavigate();
   const [operations, setOperations] = useState({
     addition: true,
     subtraction: true,
@@ -160,6 +162,7 @@ function Settings({ onStart }) {
         </select>
       </fieldset>
 
+      {/* Single Player Button */}
       <button
         onClick={handleStart}
         style={{
@@ -175,6 +178,24 @@ function Settings({ onStart }) {
         }}
       >
         Start
+      </button>
+
+      {/* Multiplayer Button */}
+      <button
+        onClick={() => navigate("/multiplayer")}
+        style={{
+          marginTop: "1rem",
+          width: "100%",
+          padding: "0.5rem",
+          fontSize: "1rem",
+          backgroundColor: "#10b981",
+          color: "#fff",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+        }}
+      >
+        Play Multiplayer
       </button>
     </div>
   );
