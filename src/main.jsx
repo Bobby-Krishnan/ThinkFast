@@ -8,6 +8,8 @@ import JoinLobby from "./JoinLobby";
 import HostGameLobby from "./HostGameLobby";
 import PlayerLobby from "./PlayerLobby";
 import MultiplayerGame from "./MultiplayerGame";
+import MultiplayerResults from "./MultiplayerResults";
+
 
 
 
@@ -25,6 +27,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Route path="/lobby/:lobbyCode/player" element={<PlayerLobby />} />
       <Route path="/lobby/:lobbyCode/host/game" element={<MultiplayerGame />} />
       <Route path="/lobby/:lobbyCode/player/game" element={<MultiplayerGame />} />  
+      <Route path="/lobby/:lobbyCode/host/results" element={<MultiplayerResults />} />
+      <Route path="/lobby/:lobbyCode/player/results" element={<MultiplayerResults />} />
     </Routes>
   </BrowserRouter>
 );
