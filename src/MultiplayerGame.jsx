@@ -15,13 +15,14 @@ function MultiplayerGame() {
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(null);
   const [startTime, setStartTime] = useState(null);
+
   const inputRef = useRef(null);
   const finishedRef = useRef(false);
+  const scoreRef = useRef(0); // NEW: to track latest score
 
   const isHost = location.pathname.includes("host");
   const playerId = `${lobbyCode}-${isHost ? "host" : "player"}`;
 
-  // Load lobby settings and start time
   useEffect(() => {
     const fetchLobby = async () => {
       const snap = await getDoc(doc(db, "lobbies", lobbyCode));
@@ -35,7 +36,6 @@ function MultiplayerGame() {
     fetchLobby();
   }, [lobbyCode]);
 
-  // Sync timer based on startTime
   useEffect(() => {
     if (!startTime || !settings) return;
 
@@ -55,7 +55,6 @@ function MultiplayerGame() {
     return () => clearInterval(interval);
   }, [startTime, settings]);
 
-  // Autofocus input on question change
   useEffect(() => {
     requestAnimationFrame(() => inputRef.current?.focus());
   }, [currentIndex]);
@@ -70,7 +69,11 @@ function MultiplayerGame() {
     const correctAnswer = eval(currentQ.replace("×", "*").replace("÷", "/"));
 
     if (parseInt(value) === correctAnswer) {
-      setScore((prev) => prev + 1);
+      setScore((prev) => {
+        const newScore = prev + 1;
+        scoreRef.current = newScore;
+        return newScore;
+      });
       setCurrentIndex((prev) => prev + 1);
       setInput("");
     }
@@ -83,7 +86,11 @@ function MultiplayerGame() {
       const numeric = parseInt(input);
 
       if (numeric !== correctAnswer) {
-        setScore((s) => Math.max(0, s - 1));
+        setScore((prev) => {
+          const newScore = Math.max(0, prev - 1);
+          scoreRef.current = newScore;
+          return newScore;
+        });
         setCurrentIndex((i) => i + 1);
         setInput("");
       }
@@ -96,7 +103,7 @@ function MultiplayerGame() {
 
     try {
       await updateDoc(doc(db, "lobbies", lobbyCode), {
-        [`players.${playerId}.score`]: score,
+        [`players.${playerId}.score`]: scoreRef.current,
       });
 
       navigate(`/lobby/${lobbyCode}/${isHost ? "host" : "player"}/results`);
