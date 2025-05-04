@@ -16,6 +16,9 @@ function MultiplayerGame() {
   const [timeLeft, setTimeLeft] = useState(null);
   const [startTime, setStartTime] = useState(null);
 
+  const [countdown, setCountdown] = useState(3);
+  const [gameStarted, setGameStarted] = useState(false);
+
   const inputRef = useRef(null);
   const finishedRef = useRef(false);
   const scoreRef = useRef(0);
@@ -36,8 +39,39 @@ function MultiplayerGame() {
     fetchLobby();
   }, [lobbyCode]);
 
+  // Start countdown when settings and startTime are ready
   useEffect(() => {
     if (!startTime || !settings) return;
+
+    const countdownTimer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(countdownTimer);
+          setGameStarted(true);
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(countdownTimer);
+  }, [startTime, settings]);
+
+  // Focus input after game starts and question changes
+  useEffect(() => {
+    if (!gameStarted) return;
+    const interval = setInterval(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+        clearInterval(interval);
+      }
+    }, 50);
+
+    return () => clearInterval(interval);
+  }, [gameStarted, currentIndex]);
+
+  // Timer logic
+  useEffect(() => {
+    if (!startTime || !settings || !gameStarted) return;
 
     const interval = setInterval(() => {
       const now = Date.now();
@@ -53,19 +87,7 @@ function MultiplayerGame() {
     }, 250);
 
     return () => clearInterval(interval);
-  }, [startTime, settings]);
-
-  // 🔧 Robust focus fix for host/player
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (inputRef.current) {
-        inputRef.current.focus();
-        clearInterval(interval);
-      }
-    }, 50);
-
-    return () => clearInterval(interval);
-  }, [currentIndex]);
+  }, [startTime, settings, gameStarted]);
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -122,6 +144,24 @@ function MultiplayerGame() {
 
   if (!settings || !questions.length) return <p>Loading game...</p>;
 
+  if (!gameStarted) {
+    return (
+      <div
+        style={{
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          fontSize: "5rem",
+          fontWeight: "bold",
+          backgroundColor: "#f9fafb",
+        }}
+      >
+        {countdown > 0 ? countdown : "Go!"}
+      </div>
+    );
+  }
+
   return (
     <div
       style={{
@@ -151,11 +191,13 @@ function MultiplayerGame() {
           onKeyDown={handleKeyDown}
           ref={inputRef}
           style={{
-            fontSize: "2rem",
-            padding: "0.25rem",
+            fontSize: "2.5rem",
+            padding: "0.5rem",
             width: "150px",
             textAlign: "center",
             appearance: "textfield",
+            WebkitAppearance: "none",
+            MozAppearance: "textfield",
           }}
         />
       </div>
