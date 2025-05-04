@@ -4,6 +4,8 @@ import App from "./App.jsx";
 import MultiplayerMenu from "./MultiplayerMenu.jsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import CreateLobby from "./CreateLobby";
+import JoinLobby from "./JoinLobby";
+
 
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -12,6 +14,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Route path="/" element={<App />} />
       <Route path="/multiplayer" element={<MultiplayerMenu />} />
       <Route path="/create-lobby" element={<CreateLobby />} />
+      <Route path="/join-lobby" element={<JoinLobby />} />
     </Routes>
   </BrowserRouter>
 );
