@@ -25,7 +25,7 @@ At the moment, the only game mode possible for multiplayer is the deafult 120 se
 
 **Global Stats**
 
-Live "Problems Solved" counter on the home screen
+Live "Problems Solved" counter on the home screen. This value increments automatically after every finished game
 
 
 
