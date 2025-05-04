@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import CreateLobby from "./CreateLobby";
 import JoinLobby from "./JoinLobby";
 import HostGameLobby from "./HostGameLobby";
+import PlayerLobby from "./PlayerLobby";
+
 
 
 
@@ -18,6 +20,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Route path="/create-lobby" element={<CreateLobby />} />
       <Route path="/join-lobby" element={<JoinLobby />} />
       <Route path="/lobby/:lobbyCode/host" element={<HostGameLobby />} />
+      <Route path="/lobby/:lobbyCode/player" element={<PlayerLobby />} />
     </Routes>
   </BrowserRouter>
 );
