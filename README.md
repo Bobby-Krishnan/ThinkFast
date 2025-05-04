@@ -32,6 +32,10 @@ Live "Problems Solved" counter on the home screen
 
 
 
+<img width="1031" alt="Screenshot 2025-05-04 at 6 45 26 AM" src="https://github.com/user-attachments/assets/b8704c60-f0f0-467c-aea1-846a1f3b23b6" />
+
+
+
 
   
 
