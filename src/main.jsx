@@ -5,6 +5,8 @@ import MultiplayerMenu from "./MultiplayerMenu.jsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import CreateLobby from "./CreateLobby";
 import JoinLobby from "./JoinLobby";
+import HostGameLobby from "./HostGameLobby";
+
 
 
 
@@ -15,6 +17,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Route path="/multiplayer" element={<MultiplayerMenu />} />
       <Route path="/create-lobby" element={<CreateLobby />} />
       <Route path="/join-lobby" element={<JoinLobby />} />
+      <Route path="/lobby/:lobbyCode/host" element={<HostGameLobby />} />
     </Routes>
   </BrowserRouter>
 );
