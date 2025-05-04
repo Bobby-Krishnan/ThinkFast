@@ -60,7 +60,7 @@ function App() {
             padding: "2rem",
           }}
         >
-          <h1 style={{ textAlign: "center", marginBottom: "1rem" }}>
+          <h1 style={{ textAlign: "center", marginBottom: "1rem", fontSize: "3.5rem", fontweight: 700, }}>
             ThinkFast
           </h1>
           <GlobalStats />
