@@ -45,8 +45,8 @@ function MultiplayerResults() {
   const oppScore = players[opponentId]?.score ?? 0;
 
   let resultMsg = "It's a tie!";
-  if (myScore > oppScore) resultMsg = "You win! 🎉";
-  else if (myScore < oppScore) resultMsg = "You lose 😢";
+  if (myScore > oppScore) resultMsg = "You win!";
+  else if (myScore < oppScore) resultMsg = "You lose";
 
   return (
     <div

@@ -14,6 +14,7 @@ function MultiplayerGame() {
   const [input, setInput] = useState("");
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(null);
+  const [startTime, setStartTime] = useState(null);
   const inputRef = useRef(null);
 
   const isHost = location.pathname.includes("host");
@@ -23,28 +24,34 @@ function MultiplayerGame() {
     const fetchLobby = async () => {
       const snap = await getDoc(doc(db, "lobbies", lobbyCode));
       const data = snap.data();
+
       setSettings(data.settings);
       setQuestions(data.questions);
-      setTimeLeft(data.settings.duration);
+      setStartTime(data.startTime);
     };
 
     fetchLobby();
   }, [lobbyCode]);
 
+  // Sync timer using system clock
   useEffect(() => {
-    if (timeLeft === null) return;
+    if (!startTime || !settings) return;
 
-    if (timeLeft <= 0) {
-      finishGame();
-      return;
-    }
+    const interval = setInterval(() => {
+      const now = Date.now();
+      const elapsed = Math.floor((now - startTime) / 1000);
+      const remaining = settings.duration - elapsed;
 
-    const timer = setTimeout(() => {
-      setTimeLeft((prev) => prev - 1);
-    }, 1000);
+      if (remaining <= 0) {
+        clearInterval(interval);
+        finishGame();
+      } else {
+        setTimeLeft(remaining);
+      }
+    }, 250); // Small interval for smoother updates
 
-    return () => clearTimeout(timer);
-  }, [timeLeft]);
+    return () => clearInterval(interval);
+  }, [startTime, settings]);
 
   useEffect(() => {
     requestAnimationFrame(() => inputRef.current?.focus());
@@ -84,6 +91,7 @@ function MultiplayerGame() {
     await updateDoc(doc(db, "lobbies", lobbyCode), {
       [`players.${playerId}.score`]: score,
     });
+
     navigate(`/lobby/${lobbyCode}/${isHost ? "host" : "player"}/results`);
   };
 
@@ -102,13 +110,11 @@ function MultiplayerGame() {
         textAlign: "center",
       }}
     >
-      {/* Top bar */}
       <div style={{ width: "100%", display: "flex", justifyContent: "space-between", fontSize: "1.2rem" }}>
-        <div>Time: {timeLeft}s</div>
+        <div>Time: {timeLeft ?? settings.duration}s</div>
         <div>Score: {score}</div>
       </div>
 
-      {/* Question */}
       <div style={{ fontSize: "2rem", fontWeight: "bold", marginTop: "4rem" }}>
         {questions[currentIndex] || "Done!"} ={" "}
         <input
@@ -127,7 +133,6 @@ function MultiplayerGame() {
         />
       </div>
 
-      {/* Footer buffer */}
       <div style={{ height: "1rem" }} />
     </div>
   );

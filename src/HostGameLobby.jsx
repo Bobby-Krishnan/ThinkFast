@@ -86,6 +86,7 @@ function HostGameLobby() {
       status: "in_progress",
       questions,
       settings,
+      startTime: Date.now(),
     });
   };
 
